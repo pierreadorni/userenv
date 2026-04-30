@@ -39,13 +39,12 @@ User environment 'numpy2' activated.
 
 ## Installation
 
-Install the latest development version directly from the github repo:
+
+```bash
+$ pip install pyuserenv
 ```
-git clone git@github.com:pierreadorni/userenv.git
-cd userenv
-pip install .
-```
-Configure the environment variables in your shell configuration file (e.g., .bashrc, .zshrc)
+
+**Make sure** to Configure the environment variables in your shell configuration file (e.g., .bashrc, .zshrc)
 ```bash
 export USERENV_DIR="$HOME/.userenv" # default value, adapt to your needs
 export PYTHONUSERBASE="$USERENV_DIR"
