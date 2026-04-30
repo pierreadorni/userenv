@@ -1,0 +1,31 @@
+[project]
+name = "userenv"
+dynamic = ["version"]
+description = "A Python library for managing user-installed package lists."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.8"
+dependencies = [
+    "typer",
+    "rich",
+    "shellingham"
+]
+
+[project.urls]
+Issues = "https://github.com/pierreadorni/userenv/issues"
+
+[project.scripts]
+userenv = "userenv.cli:app"
+
+[build-system]
+requires = ["hatchling >= 1.26", "hatch-vcs>=0.3.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.version]
+source = "vcs"
+
+
