@@ -97,6 +97,9 @@ def get_last_installed_module_datetime(env_name: str):
 
 
 def list_():
+    """
+    List all user environments with their installed module count and last installed module datetime.
+    """
     envs_dir = get_userenv_dir() / "envs"
     os.makedirs(envs_dir, exist_ok=True)
     envs = os.listdir(envs_dir)
@@ -105,7 +108,7 @@ def list_():
             "No user environments found. Use 'userenv create <name>' to create one."
         )
         return
-    
+
     active_env = get_active_userenv()
 
     table = Table(min_width=20)
@@ -128,6 +131,7 @@ def create(
         str, typer.Argument(help="The name of the user environment to create")
     ],
 ):
+    """Create a new user environment."""
     env_path = get_userenv_dir() / "envs" / name
 
     if os.path.exists(env_path):
@@ -144,6 +148,7 @@ def activate(
         str, typer.Argument(help="The name of the user environment to activate")
     ],
 ):
+    """Activate a user environment."""
     userenv_dir = get_userenv_dir()
     env_path = userenv_dir / "envs" / name
 
@@ -172,6 +177,7 @@ def activate(
 
 
 def active():
+    """Display the currently active user environment."""
     active_env = get_active_userenv()
     if active_env is None:
         console.print("No active user environment.")
@@ -182,6 +188,7 @@ def active():
 
 
 def deactivate():
+    """Deactivate the currently active user environment."""
     userenv_dir = get_userenv_dir()
     userenv_lib_path = userenv_dir / "lib"
     userenv_bin_path = userenv_dir / "bin"
