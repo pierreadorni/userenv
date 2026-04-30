@@ -1,5 +1,5 @@
 [project]
-name = "userenv"
+name = "pyuserenv"
 dynamic = ["version"]
 description = "A Python library for managing user-installed package lists."
 readme = "README.md"
