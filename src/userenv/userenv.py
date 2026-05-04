@@ -1,5 +1,6 @@
 from typing_extensions import Annotated
 import os
+import sys
 from pathlib import Path
 import datetime
 
@@ -199,3 +200,32 @@ def deactivate():
         userenv_bin_path.unlink()
 
     console.print("User environment deactivated.")
+
+
+def version_callback(version: bool = False):
+    """Display the version of pyuserenv, dynamically fetched from the package."""
+    if not version:
+        return
+
+    import importlib.metadata
+
+    ver = importlib.metadata.version("pyuserenv")
+    console.print(f"pyuserenv version: {ver}")
+    sys.exit(0)
+
+
+def common(
+    ctx: typer.Context,
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            "-v",
+            help="Show the version of pyuserenv",
+            is_eager=True,
+            show_default=False,
+            callback=version_callback,
+        ),
+    ] = False,
+):
+    pass
