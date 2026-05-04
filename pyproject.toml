@@ -16,7 +16,7 @@ dependencies = [
 Issues = "https://github.com/pierreadorni/userenv/issues"
 
 [project.scripts]
-userenv = "userenv.cli:app"
+userenv = "userenv.launcher:main"
 
 [build-system]
 requires = ["hatchling >= 1.26", "hatch-vcs>=0.3.0"]
