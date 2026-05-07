@@ -288,7 +288,7 @@ def setup(
     rc_code = f"""# pyuserenv setup
 export USERENV_DIR={userenv_dir}
 export USERENV_BIN={Path(sys.argv[0]).resolve()}
-__pythonuserbase_memory = "$PYTHONUSERBASE"
+__pythonuserbase_memory="$PYTHONUSERBASE"
 userenv() {{
     \\local cmd="${{1-m__missing__}}"
     case "$cmd" in
