@@ -6,6 +6,7 @@ from .userenv import (
     activate,
     active,
     deactivate,
+    setup,
     common,
     check_pythonuserbase_equals_userenv_dir,
 )
@@ -20,6 +21,7 @@ app.command("create")(create)
 app.command("activate")(activate)
 app.command("active")(active)
 app.command("deactivate")(deactivate)
+app.command("setup")(setup)
 
 
 if __name__ == "__main__":

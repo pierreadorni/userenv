@@ -57,7 +57,7 @@ def get_active_userenv():
     if not lib_dir.is_symlink():
         return None
 
-    target = lib_dir.resolve()
+    target = lib_dir.readlink()
     env_name = target.parent.name
 
     return env_name
@@ -174,6 +174,37 @@ def activate(
     os.symlink(lib_path, userenv_lib_path)
     os.symlink(bin_path, userenv_bin_path)
 
+    # link the userenv script bin and the userenv lib to the newly activated environment, so that the userenv cli is still reachable
+
+    # script
+    script_path = Path(sys.argv[0]).resolve()
+    userenv_bin_script_path = userenv_dir / "bin" / script_path.name
+    if userenv_bin_script_path.is_symlink() or userenv_bin_script_path.exists():
+        userenv_bin_script_path.unlink()
+    os.symlink(script_path, userenv_bin_script_path)
+
+    # lib
+    default_libs_path = userenv_dir / "envs" / "default" / "lib"
+    python_version_target = None
+    for python_version in default_libs_path.iterdir():
+        site_packages = python_version / "site-packages"
+        if site_packages.exists() and (site_packages / "pyuserenv").exists():
+            python_version_target = python_version
+            break
+    if python_version_target is not None:
+        new_userenv_site_packages_path = (
+            userenv_dir / "lib" / python_version_target.name / "site-packages"
+        )
+        default_userenv_site_packages_path = (
+            default_libs_path / python_version_target.name / "site-packages"
+        )
+
+        os.makedirs(new_userenv_site_packages_path, exist_ok=True)
+        os.symlink(
+            default_userenv_site_packages_path / "pyuserenv",
+            new_userenv_site_packages_path / "pyuserenv",
+        )
+
     console.print(f"User environment '{name}' activated.")
 
 
@@ -200,6 +231,83 @@ def deactivate():
         userenv_bin_path.unlink()
 
     console.print("User environment deactivated.")
+
+
+def setup(
+    path: Annotated[
+        Path | None,
+        typer.Argument(
+            help="The path to set up pyuserenv in. defaults to a new .userenv directory sibling of the current PYTHONUSERBASE"
+        ),
+    ] = None,
+):
+    """Setup the user environment directory structure."""
+    # check the setup is not already done
+    if os.environ.get("USERENV_DIR") is not None:
+        console.print("USERENV_DIR is already set, it seems the setup is already done.")
+        return
+
+    pythonuserbase_dir = get_pythonuserbase_dir()
+    console.print(f"Current PYTHONUSERBASE: {pythonuserbase_dir}")
+    if path is not None:
+        userenv_dir = path
+    else:
+        userenv_dir = pythonuserbase_dir.parent / ".userenv"
+    console.print(f"Setting up userenv at {userenv_dir}")
+
+    os.makedirs(userenv_dir, exist_ok=True)
+    os.makedirs(userenv_dir / "envs", exist_ok=True)
+
+    # create default environment
+    env_path = userenv_dir / "envs" / "default"
+    os.makedirs(env_path, exist_ok=True)
+
+    # create symlink from default env to old pythonuserbase
+    old_lib_path = pythonuserbase_dir / "lib"
+    old_bin_path = pythonuserbase_dir / "bin"
+    new_lib_path = env_path / "lib"
+    new_bin_path = env_path / "bin"
+    if new_lib_path.is_symlink():
+        new_lib_path.unlink()
+    if new_bin_path.is_symlink():
+        new_bin_path.unlink()
+
+    os.symlink(old_lib_path, new_lib_path)
+    os.symlink(old_bin_path, new_bin_path)
+    console.print(
+        f"User environment 'default' created, carrying over existing user packages from {pythonuserbase_dir}."
+    )
+
+    # activate the default environment
+    lib_path = env_path / "lib"
+    bin_path = env_path / "bin"
+    userenv_lib_path = userenv_dir / "lib"
+    userenv_bin_path = userenv_dir / "bin"
+
+    os.makedirs(lib_path, exist_ok=True)
+    os.makedirs(bin_path, exist_ok=True)
+
+    if userenv_lib_path.is_symlink() or userenv_lib_path.exists():
+        userenv_lib_path.unlink()
+    if userenv_bin_path.is_symlink() or userenv_bin_path.exists():
+        userenv_bin_path.unlink()
+
+    os.symlink(lib_path, userenv_lib_path)
+    os.symlink(bin_path, userenv_bin_path)
+    console.print("User environment 'default' activated.")
+
+    rc_exports = f"""# pyuserenv setup
+export USERENV_DIR={userenv_dir}
+export PYTHONUSERBASE="$USERENV_DIR"
+export PATH="$PATH:$USERENV_DIR/bin" """
+    console.print(
+        Panel(
+            f"""Add the following lines to your shell configuration file (e.g. .bashrc, .zshrc) to complete the setup:""",
+            expand=False,
+            border_style="red",
+        )
+    )
+    console.print(f"[blue]{rc_exports}[/blue]")
 
 
 def version_callback(version: bool = False):
