@@ -41,16 +41,11 @@ User environment 'numpy2' activated.
 
 
 ```bash
-$ pip install pyuserenv
+$ pip install --user pyuserenv
+$ userenv setup
 ```
 
-**Make sure** to Configure the environment variables in your shell configuration file (e.g., .bashrc, .zshrc)
-```bash
-export USERENV_DIR="$HOME/.userenv" # default value, adapt to your needs
-export PYTHONUSERBASE="$USERENV_DIR"
-export PATH="$PATH:$USERENV_DIR/bin"
-```
-then reload your config
+**Make sure** to follow the setup instructions with the modifications to your shell configuration file (e.g., .bashrc, .zshrc), then reload your config
 ``` bash
 source ~/.bashrc # example for .bashrc
 ```
@@ -58,23 +53,24 @@ source ~/.bashrc # example for .bashrc
 You're good to go !
 
 ```
-userenv --help
-                                                                                                    
- Usage: userenv [OPTIONS] COMMAND [ARGS]...                                                         
-                                                                                                    
-╭─ Options ────────────────────────────────────────────────────────────────────────────────────────╮
-│ --install-completion          Install completion for the current shell.                          │
-│ --show-completion             Show completion for the current shell, to copy it or customize the │
-│                               installation.                                                      │
-│ --help                        Show this message and exit.                                        │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────╮
-│ list                                                                                             │
-│ create                                                                                           │
-│ activate                                                                                         │
-│ active                                                                                           │
-│ deactivate                                                                                       │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+$ userenv --help
+
+ Usage: userenv [OPTIONS] COMMAND [ARGS]...
+
+╭─ Options ─────────────────────────────────────────────────────────╮
+│ --version  -v        Show the version of pyuserenv                │
+│ --help               Show this message and exit.                  │
+╰───────────────────────────────────────────────────────────────────╯
+╭─ Commands ────────────────────────────────────────────────────────╮
+│ list        List all user environments with their installed       │
+│             module count and last installed module datetime.      │
+│ create      Create a new user environment.                        │
+│ activate    Activate a user environment.                          │
+│ active      Display the currently active user environment.        │
+│ deactivate  Deactivate the currently active user environment.     │
+│ setup       Setup the user environment directory structure.       │
+│ delete      Delete an existing user environment.                  │
+╰───────────────────────────────────────────────────────────────────╯
 ```
 
 ## Contributing
