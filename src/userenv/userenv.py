@@ -198,11 +198,11 @@ def activate(
 
     os.makedirs(new_userenv_site_packages_path, exist_ok=True)
 
-    if (new_userenv_site_packages_path / "pyuserenv").is_symlink():
-        (new_userenv_site_packages_path / "pyuserenv").unlink()
+    if (new_userenv_site_packages_path / "userenv").is_symlink():
+        (new_userenv_site_packages_path / "userenv").unlink()
     os.symlink(
         lib_path,
-        new_userenv_site_packages_path / "pyuserenv",
+        new_userenv_site_packages_path / "userenv",
     )
 
     # set pythonuserbase to the selected environment
