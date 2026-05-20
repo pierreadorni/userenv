@@ -1,4 +1,5 @@
 from typing_extensions import Annotated
+from typing import Optional
 import os
 import sys
 from pathlib import Path
@@ -261,7 +262,7 @@ def deactivate():
 
 def setup(
     path: Annotated[
-        Path | None,
+        Optional[Path],
         typer.Argument(
             help="The path to set up pyuserenv in. defaults to a new .userenv directory sibling of the current PYTHONUSERBASE"
         ),
