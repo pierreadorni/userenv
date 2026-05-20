@@ -190,7 +190,7 @@ def activate(
 
     # lib
     lib_path = Path(__file__).resolve().parent
-    python_version_target = lib_path.parent.name
+    python_version_target = f"python{sys.version_info.major}.{sys.version_info.minor}"
 
     new_userenv_site_packages_path = (
         env_path / "lib" / python_version_target / "site-packages"
