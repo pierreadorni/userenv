@@ -184,9 +184,8 @@ def activate(
     env_binaries_path = env_path / "bin"
     os.makedirs(env_binaries_path, exist_ok=True)
     userenv_bin_script_path = env_path / "bin" / script_path.name
-    if userenv_bin_script_path.is_symlink() or userenv_bin_script_path.exists():
-        userenv_bin_script_path.unlink()
-    os.symlink(script_path, userenv_bin_script_path)
+    if not userenv_bin_script_path.is_symlink():
+        os.symlink(script_path, userenv_bin_script_path)
 
     # lib
     lib_path = Path(__file__).resolve().parent
@@ -198,12 +197,11 @@ def activate(
 
     os.makedirs(new_userenv_site_packages_path, exist_ok=True)
 
-    if (new_userenv_site_packages_path / "userenv").is_symlink():
-        (new_userenv_site_packages_path / "userenv").unlink()
-    os.symlink(
-        lib_path,
-        new_userenv_site_packages_path / "userenv",
-    )
+    if not (new_userenv_site_packages_path / "userenv").is_symlink():
+        os.symlink(
+            lib_path,
+            new_userenv_site_packages_path / "userenv",
+        )
 
     # set pythonuserbase to the selected environment
     command = f"""export PYTHONUSERBASE={env_path}"""
